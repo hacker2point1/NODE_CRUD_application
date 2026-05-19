@@ -12,6 +12,22 @@ class ProductController {
         productPrice,
         desc,
       });
+      // if(!productName){
+      //   return res.status(400).json({
+      //     status: false,
+      //     message: "Product name required" 
+      //   })
+      // }
+      //validation for the required fields [dynamic]
+      const requiredFields = ["productName", "productPrice", "desc"]
+      for(let field of requiredFields){
+        if(!req.body[field]){
+          return res.status(400).json({
+            status: false,
+            message: `${field} is required`
+          })
+        }
+      }
       const data = await product.save();
       return res.status(201).json({
         status: true,
