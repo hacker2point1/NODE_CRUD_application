@@ -2,7 +2,7 @@ require("dotenv").config();
 const express = require("express");
 const ejs = require("ejs");
 const ConnectDB = require("./app/config/db");
-
+const path = require("path")
 
 const app = express();
 ConnectDB();
@@ -10,8 +10,10 @@ ConnectDB();
 app.set("view engine", "ejs");
 app.set("views", "views");
 
-
+//static folders
 app.use(express.static("public"));
+app.use('uploads',express.static(path.join(__dirname,'/uploads')))
+app.use('/uploads',express.static('uploads'))
 
 //middleware
 app.use(express.json());

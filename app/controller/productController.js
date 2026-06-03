@@ -12,6 +12,9 @@ class ProductController {
         productPrice,
         desc,
       });
+      if(req.file){
+        product.image = req.file.path
+      }
       // if(!productName){
       //   return res.status(400).json({
       //     status: false,
@@ -27,6 +30,13 @@ class ProductController {
             message: `${field} is required`
           })
         }
+      }
+      //validation for the product price not negetive
+      if(productPrice<0){
+        return res.status(400).json({
+          status: false,
+          message: "Price should not be negetive"
+        })
       }
       const data = await product.save();
       return res.status(201).json({
@@ -122,6 +132,29 @@ class ProductController {
         status: false,
         message:"something went wrong",
         error: err
+      })
+    }
+  }
+  async searchProduct(req,res){
+    try{
+      const keyword = req.query.keyword || ""
+      const products = await Product.find({
+        productName:{
+          $regex : keyword,
+          $options:"i"
+        }
+
+      })
+      return res.status(200).json({
+        status: true,
+        total: products.length,
+        data: products
+      })
+    }
+    catch(error){
+      return res.status(500).json({
+        status: false,
+        message: "Faild to search"
       })
     }
   }
